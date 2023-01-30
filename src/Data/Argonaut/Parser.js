@@ -1,3 +1,13 @@
+function isDigit(s) {
+  const char = s.charCodeAt(0);
+
+  return 48 <= char && char <= 57;
+}
+
+function isSign(s) {
+  return s.charCodeAt(0) === 45;
+}
+
 const codePoints = {
   "\\\"": "\"",
   "\\\\": "\\",
@@ -10,7 +20,7 @@ const codePoints = {
 };
 
 function isNumberStart(char) {
-  return Boolean(char.match(/^(-|\d)$/));
+  return Boolean(isSign(char) || isDigit(char));
 }
 
 function isWhitespace(char) {
@@ -76,12 +86,12 @@ function parseNumber(context) {
 
   if (source[i] === "0") {
     i++;
-  } else if (source[i].match(/^[1-9]$/)) {
+  } else if (isDigit(source[i])) {
     integer = source[i];
     i++;
 
     while (i < source.length) {
-      if (source[i].match(/^\d$/)) {
+      if (isDigit(source[i])) {
         integer += source[i];
         i++;
       } else {
@@ -98,7 +108,7 @@ function parseNumber(context) {
     i++;
 
     while (i < source.length) {
-      if (source[i].match(/^\d$/)) {
+      if (isDigit(source[i])) {
         fraction += source[i];
         i++;
       } else {
@@ -120,7 +130,7 @@ function parseNumber(context) {
     const exponentStartIndex = i;
 
     while (i < source.length) {
-      if (source[i].match(/^\d$/)) {
+      if (isDigit(source[i])) {
         exponent += source[i];
         i++;
       } else {
@@ -396,3 +406,4 @@ export function _jsonParser(Left, Right, JNumber, JString, JArray, JObject, JBoo
     return Left(e.message);
   }
 }
+
