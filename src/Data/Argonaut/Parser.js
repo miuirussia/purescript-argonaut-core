@@ -58,10 +58,6 @@ function nextContext(context, nextIndex, nextKey) {
   return newContext;
 }
 
-function identity(s) {
-  return s;
-}
-
 function parseNumber(context) {
   const { source, index } = context;
 
@@ -393,9 +389,9 @@ function parseJson(source, createNumber, createString, createArray, createObject
   return result.value;
 }
 
-export function _jsonParser(Left, Right, s) {
+export function _jsonParser(Left, Right, JNumber, JString, JArray, JObject, JBoolean, JNull, s) {
   try {
-    return Right(parseJson(s));
+    return Right(parseJson(s, JNumber, JString, JArray, JObject, JBoolean, () => JNull));
   } catch (e) {
     return Left(e.message);
   }

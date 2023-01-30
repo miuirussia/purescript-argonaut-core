@@ -1,5 +1,4 @@
-/* eslint-disable no-eq-null, eqeqeq */
-export function stringify(j) {
+export function jsonString(j) {
   return JSON.stringify(j);
 }
 

@@ -45,6 +45,8 @@ import Prelude
 import Data.Maybe (Maybe(..))
 import Data.Number (fromString) as Number
 import Data.Number.Format (toString) as Number
+import Data.String.Common (joinWith) as String
+import Data.Tuple.Nested ((/\))
 import Foreign.Object (Object)
 import Foreign.Object as Obj
 
@@ -282,7 +284,20 @@ jsonSingletonObject key val = fromObject (Obj.singleton key val)
 
 -- | Converts a `Json` value to a JSON string. To retrieve a string from a `Json`
 -- | string value, see `fromString`.
-foreign import stringify :: Json -> String
+stringify :: Json -> String
+stringify = case _ of
+  JNull -> "null"
+  JBoolean true -> "true"
+  JBoolean false -> "false"
+  JNumber num -> num
+  JString str -> jsonString str
+  JArray arr -> "[" <> (String.joinWith "," $ map stringify arr) <> "]"
+  JObject obj -> "{" <> stringifyObject obj <> "}"
+  where
+    stringifyObject :: Object Json -> String
+    stringifyObject obj = String.joinWith "," $ map (\(key /\ value) -> jsonString key <> ":" <> stringify value) $ Obj.toAscUnfoldable obj
+
+foreign import jsonString :: String -> String
 
 -- | Converts a `Json` value to a JSON string.
 -- | The first `Int` argument specifies the amount of white space characters to use as indentation.
