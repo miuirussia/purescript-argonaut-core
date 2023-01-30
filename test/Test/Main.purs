@@ -3,12 +3,13 @@ module Test.Main where
 import Prelude
 
 import Control.Monad.Gen as Gen
-import Data.Argonaut.Core (Json, caseJson, caseJsonArray, caseJsonBoolean, caseJsonNull, caseJsonNumber, caseJsonObject, caseJsonString, fromArray, fromBoolean, fromNumber, fromObject, fromString, isArray, isBoolean, isNull, isNumber, isObject, isString, jsonNull, stringify, toArray, toBoolean, toNull, toNumber, toObject, toString)
+import Data.Argonaut.Core (Json, caseJson, caseJsonArray, caseJsonBoolean, caseJsonNull, caseJsonNumber, caseJsonObject, caseJsonString, fromArray, fromBoolean, fromNumber, fromObject, fromString, isArray, isBoolean, isNull, isNumber, isObject, isString, jsonNull, jsonTrue, jsonZero, jsonEmptyString, jsonEmptyObject, jsonEmptyArray, stringify, toArray, toBoolean, toNull, toNumber, toObject, toString)
 import Data.Argonaut.Gen (genJson)
 import Data.Argonaut.Parser (jsonParser)
 import Data.Array as A
 import Data.Either (isLeft, Either(..))
 import Data.Maybe (Maybe(..), fromJust)
+import Data.Number.Format (toString) as Number
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (log)
@@ -17,12 +18,24 @@ import Partial.Unsafe (unsafePartial)
 import Test.QuickCheck (class Testable, Result, quickCheck, quickCheck', (<?>))
 import Test.QuickCheck.Gen (Gen)
 
-foreign import thisIsNull :: Json
-foreign import thisIsBoolean :: Json
-foreign import thisIsNumber :: Json
-foreign import thisIsString :: Json
-foreign import thisIsArray :: Json
-foreign import thisIsObject :: Json
+thisIsNull :: Json
+thisIsNull = jsonNull
+
+thisIsBoolean :: Json
+thisIsBoolean = jsonTrue
+
+thisIsNumber :: Json
+thisIsNumber = jsonZero
+
+thisIsString :: Json
+thisIsString = jsonEmptyString
+
+thisIsArray :: Json
+thisIsArray = jsonEmptyArray
+
+thisIsObject :: Json
+thisIsObject = jsonEmptyObject
+
 foreign import thisIsInvalidString :: String
 
 isTest :: Effect Unit
@@ -101,7 +114,7 @@ fromTest :: Effect Unit
 fromTest = do
   assert ((caseJsonNull false (const true) jsonNull) <?> "Error in fromNull")
   quickCheck (\bool -> caseJsonBoolean Nothing Just (fromBoolean bool) == Just bool <?> "Error in fromBoolean")
-  quickCheck (\num -> caseJsonNumber Nothing Just (fromNumber num) == Just num <?> "Error in fromNumber")
+  quickCheck (\num -> caseJsonNumber Nothing Just (fromNumber num) == Just (Number.toString num) <?> "Error in fromNumber")
   quickCheck (\str -> caseJsonString Nothing Just (fromString str) == Just str <?> "Error in fromString")
   quickCheck
     ( \num ->

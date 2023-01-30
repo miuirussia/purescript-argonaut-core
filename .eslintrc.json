@@ -17,7 +17,6 @@
     "no-return-assign": "error",
     "no-sequences": "error",
     "no-unused-expressions": "error",
-    "no-use-before-define": "error",
     "no-undef": "error",
     "no-eq-null": "error",
     "radix": ["error", "always"],

@@ -9,6 +9,7 @@
   , "functions"
   , "gen"
   , "maybe"
+  , "numbers"
   , "nonempty"
   , "partial"
   , "prelude"
