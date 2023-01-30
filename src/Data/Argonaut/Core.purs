@@ -37,7 +37,6 @@ module Data.Argonaut.Core
   , jsonEmptyObject
   , jsonSingletonObject
   , stringify
-  , stringifyWithIndent
   ) where
 
 import Prelude
@@ -298,8 +297,3 @@ stringify = case _ of
     stringifyObject obj = String.joinWith "," $ map (\(key /\ value) -> jsonString key <> ":" <> stringify value) $ Obj.toAscUnfoldable obj
 
 foreign import jsonString :: String -> String
-
--- | Converts a `Json` value to a JSON string.
--- | The first `Int` argument specifies the amount of white space characters to use as indentation.
--- | This number is capped at 10 (if it is greater, the value is just 10). Values less than 1 indicate that no space should be used.
-foreign import stringifyWithIndent :: Int -> Json -> String
